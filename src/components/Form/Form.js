@@ -8,6 +8,8 @@ const Form = props => {
   const inputRef = useRef();
 
   const { title, description, items } = props.schema;
+  const { data } = props;
+
   const objList = [];
 
   const initializeObjList = () => {
@@ -23,19 +25,30 @@ const Form = props => {
       objList.push(obj);
     }
   };
-
   initializeObjList();
 
   useEffect(() => {
     inputRef.current.focus();
   }, [inputRef]);
 
+  const formSubmitHandler = e => {
+    e.preventDefault();
+    const formData = {
+      spotName: e.target[0].value,
+      spotAddress: e.target[1].value,
+      availableSpotNo: e.target[2].value,
+      spotEmail: e.target[3].value,
+      spotPrice: e.target[4].value,
+    };
+    console.log(formData);
+  };
+
   return (
     <div className={styles['form-container']}>
       <h2 className={styles['form-heading']}>{title}</h2>
       <p className={styles['form-description']}>{description}</p>
 
-      <form className={styles.form}>
+      <form onSubmit={formSubmitHandler} className={styles.form}>
         {objList.map((obj, i) => {
           return (
             <div key={obj.key} className={styles['form-control']}>
@@ -43,6 +56,7 @@ const Form = props => {
                 {obj.required ? obj.label + '*' : obj.label}
               </label>
               <input
+                defaultValue={data[obj.key]}
                 ref={i === 0 ? inputRef : null}
                 id={obj.key}
                 type={obj.type}
@@ -52,7 +66,9 @@ const Form = props => {
             </div>
           );
         })}
-        <Button className={styles['btn-submit']}>Submit</Button>
+        <Button type="submit" className={styles['btn-submit']}>
+          Submit
+        </Button>
       </form>
     </div>
   );
