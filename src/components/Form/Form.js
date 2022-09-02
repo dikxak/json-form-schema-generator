@@ -36,9 +36,9 @@ const Form = props => {
     const formData = {
       spotName: e.target[0].value,
       spotAddress: e.target[1].value,
-      availableSpotNo: e.target[2].value,
+      availableSpotNo: +e.target[2].value,
       spotEmail: e.target[3].value,
-      spotPrice: e.target[4].value,
+      spotPrice: +e.target[4].value,
     };
     console.log(formData);
   };
