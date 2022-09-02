@@ -17,20 +17,17 @@
     "availableSpotNo": {
       "type": "number",
       "label": "Available spot no",
-      "placeholder": "Enter number of spot available",
-      "required": true
+      "placeholder": "Enter number of spot available"
     },
     "spotEmail": {
       "type": "string",
       "label": "Spot email",
-      "placeholder": "Enter spot email address",
-      "required": true
+      "placeholder": "Enter spot email address"
     },
     "spotPrice": {
       "type": "number",
       "label": "Spot price",
-      "placeholder": "Enter price per visit",
-      "required": true
+      "placeholder": "Enter price per visit"
     }
   }
 }
