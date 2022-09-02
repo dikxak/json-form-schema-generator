@@ -1,0 +1,6 @@
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.8rem;
+}

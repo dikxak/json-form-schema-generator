@@ -1,6 +1,6 @@
 *,
-*::before,
-*::after {
+*::after,
+*::before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -12,7 +12,17 @@ html {
 
 body {
   min-height: 100vh;
-
   font-family: sans-serif;
+  line-height: 1.1;
   color: #333;
+  font-weight: 400;
+
+  display: grid;
+  align-items: center;
+}
+
+@media (max-width: 39em) {
+  html {
+    font-size: 50%;
+  }
 }

@@ -1,7 +1,10 @@
 import React from 'react';
+import Form from './components/Form/Form';
 
-function App() {
-  return <h1>App</h1>;
-}
+import jsonFormSchema from './JSON/json-form-schema.json';
+
+const App = () => {
+  return <Form />;
+};
 
 export default App;
