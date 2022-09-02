@@ -1,0 +1,36 @@
+{
+  "title": "Add Picnic Spot Details",
+  "description": "Please fill out the given form with correct details.",
+  "items": {
+    "spotName": {
+      "type": "string",
+      "label": "Spot name",
+      "placeholder": "Enter full name of the spot",
+      "required": true
+    },
+    "spotAddress": {
+      "type": "string",
+      "label": "Spot address",
+      "placeholder": "Enter full address of the spot",
+      "required": true
+    },
+    "availableSpotNo": {
+      "type": "number",
+      "label": "Available spot no",
+      "placeholder": "Enter number of spot available",
+      "required": true
+    },
+    "spotEmail": {
+      "type": "string",
+      "label": "Spot email",
+      "placeholder": "Enter spot email address",
+      "required": true
+    },
+    "spotPrice": {
+      "type": "number",
+      "label": "Spot price",
+      "placeholder": "Enter price per visit",
+      "required": true
+    }
+  }
+}
