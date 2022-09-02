@@ -33,13 +33,16 @@ const Form = props => {
 
   const formSubmitHandler = e => {
     e.preventDefault();
-    const formData = {
-      spotName: e.target[0].value,
-      spotAddress: e.target[1].value,
-      availableSpotNo: +e.target[2].value,
-      spotEmail: e.target[3].value,
-      spotPrice: +e.target[4].value,
-    };
+
+    const formData = {};
+
+    Array.from(e.target).forEach(t => {
+      if (t.type === 'number') {
+        formData[t.id] = +t.value;
+      } else {
+        formData[t.id] = t.value;
+      }
+    });
     console.log(formData);
   };
 
