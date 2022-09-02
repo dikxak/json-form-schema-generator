@@ -37,8 +37,11 @@ const Form = props => {
     const formData = {};
 
     Array.from(e.target).forEach(t => {
+      console.log(t);
       if (t.type === 'number') {
         formData[t.id] = +t.value;
+      } else if (t.type === 'submit') {
+        return;
       } else {
         formData[t.id] = t.value;
       }
