@@ -10,6 +10,7 @@ const Form = props => {
   const inputRef = useRef();
   const [inputData, setInputData] = useState({});
   const [warning, setWarning] = useState(false);
+  const [focusableEl, setFocusableEl] = useState();
 
   const { title, description, items } = props.schema;
   const { data } = props;
@@ -32,8 +33,12 @@ const Form = props => {
   initializeObjList();
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, [inputRef]);
+    if (focusableEl) {
+      focusableEl.focus();
+    } else {
+      inputRef.current.focus();
+    }
+  }, [inputRef, focusableEl]);
 
   const inputChangeHandler = e => {
     setInputData(prevData => {
@@ -51,7 +56,13 @@ const Form = props => {
 
     for (const key in inputData) {
       if (inputData[key].toString().trim().length === 0) {
+        const focusableEl = Array.from(e.target).filter(t => {
+          return t.id === key;
+        })[0];
+
+        setFocusableEl(focusableEl);
         setWarning(true);
+
         return;
       }
     }
@@ -77,8 +88,10 @@ const Form = props => {
 
   const closeWarningHandler = () => {
     setWarning(false);
+    focusableEl.focus();
   };
 
+  console.log('re-render');
   return (
     <React.Fragment>
       {warning
