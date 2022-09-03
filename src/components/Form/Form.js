@@ -72,10 +72,12 @@ const Form = props => {
     Array.from(e.target).forEach(t => {
       if (t.type === 'number') {
         formData[t.id] = +t.value;
+        inputData[t.id] = +t.value;
       } else if (t.type === 'submit') {
         return;
       } else {
         formData[t.id] = t.value;
+        inputData[t.id] = t.value;
       }
     });
 
@@ -91,7 +93,6 @@ const Form = props => {
     focusableEl.focus();
   };
 
-  console.log('re-render');
   return (
     <React.Fragment>
       {warning
