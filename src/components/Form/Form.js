@@ -51,9 +51,13 @@ const Form = props => {
     });
   };
 
-  const formSubmitHandler = e => {
-    e.preventDefault();
-
+  /**
+   *Sets the first input element to focusableEl for focusing if no any input value is provided (i.e. value in input element is empty)
+   * Also sets the error state to true for showing invalid input message to users.
+   * @param {object} e - event object of the form
+   * @returns {null}
+   */
+  const validateInput = e => {
     for (const key in inputData) {
       if (inputData[key].toString().trim().length === 0) {
         const focusableEl = Array.from(e.target).filter(t => {
@@ -66,9 +70,14 @@ const Form = props => {
         return;
       }
     }
+  };
 
-    const formData = {};
-
+  /**
+   * Gets data from form and populating the formData and inputData value with the value from each input.
+   * @param {object} e - event object of the form
+   * @param {*} formData - empty object to be initialized defined in the form
+   */
+  const populateInputData = (e, formData) => {
     Array.from(e.target).forEach(t => {
       if (t.type === 'number') {
         formData[t.id] = +t.value;
@@ -80,6 +89,15 @@ const Form = props => {
         inputData[t.id] = t.value;
       }
     });
+  };
+
+  const formSubmitHandler = e => {
+    e.preventDefault();
+
+    validateInput(e);
+
+    const formData = {};
+    populateInputData(e, formData);
 
     // Dynamically transformed data
     console.log(formData);
