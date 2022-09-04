@@ -12,7 +12,8 @@ const Form = props => {
 
   const inputRef = useRef();
   const [inputData, setInputData] = useState(data);
-  const [warning, setWarning] = useState(false);
+  const [isInputValid, setIsInputValid] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(true);
   const [focusableEl, setFocusableEl] = useState();
 
   const objList = [];
@@ -41,6 +42,12 @@ const Form = props => {
   }, [focusableEl]);
 
   const inputChangeHandler = e => {
+    if (e.target.value.trim().length === 0) {
+      setFocusableEl(e.target);
+      setIsInputValid(false);
+      return;
+    }
+
     setInputData(prevData => {
       const nextData = { ...prevData };
       nextData[e.target.id] =
@@ -52,45 +59,26 @@ const Form = props => {
     });
   };
 
-  /**
-   *Sets the first input element to focusableEl for focusing if no any input value is provided (i.e. value in input element is empty)
-   * Also sets the error state to true for showing invalid input message to users.
-   * @param {object} e - event object of the form
-   * @returns {number} - flag for stopping code execution in other function where it is called
-   */
-  const validateInput = e => {
-    for (const key in inputData) {
-      if (inputData[key].toString().trim().length === 0) {
-        const focusableEl = Array.from(e.target).filter(t => {
-          return t.id === key;
-        })[0];
-
-        setFocusableEl(focusableEl);
-        setWarning(true);
-
-        return 1;
-      }
-    }
-  };
-
   const formSubmitHandler = e => {
     e.preventDefault();
 
-    const value = validateInput(e);
-    if (value === 1) return;
+    if (!isInputValid) {
+      setIsFormValid(false);
+      return;
+    }
 
     // Data from onChange function in each input
     console.log(inputData);
   };
 
   const closeWarningHandler = () => {
-    setWarning(false);
+    setIsFormValid(true);
     focusableEl.focus();
   };
 
   return (
     <React.Fragment>
-      {warning
+      {!isFormValid
         ? ReactDOM.createPortal(
             <Warning
               heading="Input Error"
