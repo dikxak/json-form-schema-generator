@@ -75,7 +75,7 @@ const Form = props => {
   /**
    * Gets data from form and populating the formData and inputData value with the value from each input.
    * @param {object} e - event object of the form
-   * @param {*} formData - empty object to be initialized defined in the form
+   * @param {object} formData - empty object to be initialized defined in the form
    */
   const populateInputData = (e, formData) => {
     Array.from(e.target).forEach(t => {
