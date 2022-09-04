@@ -73,34 +73,11 @@ const Form = props => {
     }
   };
 
-  /**
-   * Gets data from form and populating the formData and inputData value with the value from each input.
-   * @param {object} e - event object of the form
-   * @param {object} formData - empty object to be initialized defined in the form
-   */
-  const populateInputData = (e, formData) => {
-    Array.from(e.target).forEach(t => {
-      if (t.type === 'number') {
-        formData[t.id] = +t.value;
-      } else if (t.type === 'submit') {
-        return;
-      } else {
-        formData[t.id] = t.value;
-      }
-    });
-  };
-
   const formSubmitHandler = e => {
     e.preventDefault();
 
     const value = validateInput(e);
     if (value === 1) return;
-
-    const formData = {};
-    populateInputData(e, formData);
-
-    // Dynamically transformed data
-    console.log(formData);
 
     // Data from onChange function in each input
     console.log(inputData);
