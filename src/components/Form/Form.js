@@ -33,12 +33,15 @@ const Form = props => {
   initializeObjList();
 
   useEffect(() => {
+    // Initialize inputData
+    setInputData(data);
+
     if (focusableEl) {
       focusableEl.focus();
     } else {
       inputRef.current.focus();
     }
-  }, [inputRef, focusableEl]);
+  }, [focusableEl, data]);
 
   const inputChangeHandler = e => {
     setInputData(prevData => {
@@ -47,6 +50,7 @@ const Form = props => {
         e.target.type === 'number' && e.target.value.trim().length !== 0
           ? +e.target.value
           : e.target.value;
+
       return nextData;
     });
   };
@@ -81,12 +85,10 @@ const Form = props => {
     Array.from(e.target).forEach(t => {
       if (t.type === 'number') {
         formData[t.id] = +t.value;
-        inputData[t.id] = +t.value;
       } else if (t.type === 'submit') {
         return;
       } else {
         formData[t.id] = t.value;
-        inputData[t.id] = t.value;
       }
     });
   };
