@@ -7,13 +7,13 @@ import Warning from '../Warning/Warning';
 import styles from './Form.module.css';
 
 const Form = props => {
-  const inputRef = useRef();
-  const [inputData, setInputData] = useState({});
-  const [warning, setWarning] = useState(false);
-  const [focusableEl, setFocusableEl] = useState();
-
   const { title, description, items } = props.schema;
   const { data } = props;
+
+  const inputRef = useRef();
+  const [inputData, setInputData] = useState(data);
+  const [warning, setWarning] = useState(false);
+  const [focusableEl, setFocusableEl] = useState();
 
   const objList = [];
 
@@ -33,15 +33,12 @@ const Form = props => {
   initializeObjList();
 
   useEffect(() => {
-    // Initialize inputData
-    setInputData(data);
-
     if (focusableEl) {
       focusableEl.focus();
     } else {
       inputRef.current.focus();
     }
-  }, [focusableEl, data]);
+  }, [focusableEl]);
 
   const inputChangeHandler = e => {
     setInputData(prevData => {
