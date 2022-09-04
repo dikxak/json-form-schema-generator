@@ -55,7 +55,7 @@ const Form = props => {
    *Sets the first input element to focusableEl for focusing if no any input value is provided (i.e. value in input element is empty)
    * Also sets the error state to true for showing invalid input message to users.
    * @param {object} e - event object of the form
-   * @returns {null}
+   * @returns {number} - flag for stopping code execution in other function where it is called
    */
   const validateInput = e => {
     for (const key in inputData) {
@@ -67,7 +67,7 @@ const Form = props => {
         setFocusableEl(focusableEl);
         setWarning(true);
 
-        return;
+        return 1;
       }
     }
   };
@@ -94,7 +94,8 @@ const Form = props => {
   const formSubmitHandler = e => {
     e.preventDefault();
 
-    validateInput(e);
+    const value = validateInput(e);
+    if (value === 1) return;
 
     const formData = {};
     populateInputData(e, formData);
