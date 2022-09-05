@@ -3,13 +3,13 @@
   "description": "Please fill out the given form with correct details.",
   "items": {
     "spotName": {
-      "type": "string",
+      "type": "text",
       "label": "Spot name",
       "placeholder": "Enter full name of the spot",
       "required": true
     },
     "spotAddress": {
-      "type": "string",
+      "type": "text",
       "label": "Spot address",
       "placeholder": "Enter full address of the spot",
       "required": true
@@ -20,7 +20,7 @@
       "placeholder": "Enter number of spot available"
     },
     "spotEmail": {
-      "type": "string",
+      "type": "email",
       "label": "Spot email",
       "placeholder": "Enter spot email address"
     },
@@ -28,6 +28,16 @@
       "type": "number",
       "label": "Spot price",
       "placeholder": "Enter price per visit"
+    },
+    "spotPassword": {
+      "type": "password",
+      "label": "Spot password",
+      "placeholder": "Enter password for your spot"
+    },
+    "username": {
+      "type": "text",
+      "label": "Username",
+      "placeholder": "Enter username"
     }
   }
 }

@@ -69,6 +69,11 @@
   background-color: #40c057;
 }
 
+.input-warning-msg {
+  color: #f03e3e;
+  font-size: 1.4rem;
+}
+
 @media (max-width: 39em) {
   .form-container {
     max-width: 95%;
