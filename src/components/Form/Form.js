@@ -175,7 +175,6 @@ const Form = props => {
       e.target.name === 'username' &&
       (e.target.value.trim().length < 6 || e.target.value.trim().length > 20)
     ) {
-      console.log('this');
       dispatchValidityState({
         type: 'USER_INPUT',
         state: false,
