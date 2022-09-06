@@ -123,7 +123,9 @@ const Form = props => {
         type: items[key].type,
         label: items[key].label,
         placeholder: items[key].placeholder,
-        required: items[key].required,
+        ...(items[key].required && { required: items[key].required }),
+        ...(items[key].min && { min: items[key].min }),
+        ...(items[key].max && { max: items[key].max }),
       };
 
       objList.push(obj);
@@ -161,7 +163,7 @@ const Form = props => {
       });
     } else if (
       e.target.type === 'password' &&
-      e.target.value.trim().length < 8
+      e.target.value.trim().length < +e.target.min
     ) {
       // Validate for password, if length is less than 8, password is invalid.
       dispatchValidityState({
@@ -173,7 +175,8 @@ const Form = props => {
       });
     } else if (
       e.target.name === 'username' &&
-      (e.target.value.trim().length < 6 || e.target.value.trim().length > 20)
+      (e.target.value.trim().length < +e.target.min ||
+        e.target.value.trim().length > +e.target.max)
     ) {
       dispatchValidityState({
         type: 'USER_INPUT',
@@ -259,6 +262,8 @@ const Form = props => {
                   name={obj.key}
                   placeholder={obj.placeholder}
                   onChange={inputChangeHandler}
+                  min={obj.min ? obj.min : null}
+                  max={obj.max ? obj.max : null}
                 />
 
                 {

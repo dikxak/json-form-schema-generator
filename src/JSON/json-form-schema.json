@@ -32,12 +32,15 @@
     "spotPassword": {
       "type": "password",
       "label": "Spot password",
-      "placeholder": "Enter password for your spot"
+      "placeholder": "Enter password for your spot",
+      "min": 8
     },
     "username": {
       "type": "text",
       "label": "Username",
-      "placeholder": "Enter username"
+      "placeholder": "Enter username",
+      "min": 6,
+      "max": 30
     }
   }
 }
