@@ -138,7 +138,7 @@ const Form = props => {
       dispatchValidityState({
         type: 'USER_INPUT',
         state: false,
-        userMsg: `${capitalizeWord(e.target.id)} can not be empty.`,
+        userMsg: `${capitalizeWord(obj.key)} can not be empty.`,
       });
     } else if (obj.type === 'email' && emailValidationExpression(e)) {
       dispatchValidityState({
@@ -181,7 +181,7 @@ const Form = props => {
         type: 'USER_INPUT',
         state: false,
         userMsg: `${capitalizeWord(
-          e.target.id
+          obj.key
         )} must be at least 8 characters long.`,
       });
     } else if (
@@ -207,7 +207,7 @@ const Form = props => {
 
       setInputData(prevData => {
         const nextData = { ...prevData };
-        nextData[e.target.id] =
+        nextData[obj.key] =
           e.target.type === 'number' && e.target.value.trim().length !== 0
             ? +e.target.value
             : e.target.value;
