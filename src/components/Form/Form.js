@@ -6,18 +6,6 @@ import Warning from '../Warning/Warning';
 
 import styles from './Form.module.css';
 
-const initialValidityState = {
-  isValid: true,
-  message: '',
-};
-
-const validityReducer = (state, action) => {
-  if (action.type === 'USER_INPUT') {
-    return { isValid: action.state, message: action.userMsg };
-  }
-  return initialValidityState;
-};
-
 /**
  * Capitalize and returns the first letter of the given sentence/word
  * @param {string} str - word/sentence whose first letter should be capitalized
@@ -90,15 +78,11 @@ const Form = props => {
   const { title, description, items } = props.schema;
   const { data } = props;
 
-  const [inputValidityState, dispatchValidityState] = useReducer(
-    validityReducer,
-    initialValidityState
-  );
-
   const inputRef = useRef();
   const [inputData, setInputData] = useState(data);
   const [isFormValid, setIsFormValid] = useState(true);
   const [focusableEl, setFocusableEl] = useState();
+  const [errorsList, setErrorsList] = useState({});
 
   const objList = [];
 
@@ -135,16 +119,26 @@ const Form = props => {
   const inputChangeHandler = (obj, e) => {
     if (e.target.value.trim().length === 0) {
       // Validate for empty value
-      dispatchValidityState({
-        type: 'USER_INPUT',
-        state: false,
-        userMsg: `${capitalizeWord(obj.key)} can not be empty.`,
+      setErrorsList(prevData => {
+        return {
+          ...prevData,
+
+          [obj.key]: {
+            userMsg: `${capitalizeWord(obj.key)} can not be empty.`,
+            validationState: false,
+          },
+        };
       });
     } else if (obj.type === 'email' && emailValidationExpression(e)) {
-      dispatchValidityState({
-        type: 'USER_INPUT',
-        state: false,
-        userMsg: `The input is not a valid email address.`,
+      setErrorsList(prevData => {
+        return {
+          ...prevData,
+
+          [obj.key]: {
+            userMsg: `The input is not a valid email address.`,
+            validationState: false,
+          },
+        };
       });
     } else if (
       obj.type === 'text' &&
@@ -152,12 +146,17 @@ const Form = props => {
       !obj.max &&
       e.target.value.trim().length < obj.min
     ) {
-      dispatchValidityState({
-        type: 'USER_INPUT',
-        state: false,
-        userMsg: `${capitalizeWord(obj.key)} must be at least ${
-          obj.min
-        } characters.`,
+      setErrorsList(prevData => {
+        return {
+          ...prevData,
+
+          [obj.key]: {
+            userMsg: `${capitalizeWord(obj.key)} must be at least ${
+              obj.min
+            } characters.`,
+            validationState: false,
+          },
+        };
       });
     } else if (
       obj.type === 'text' &&
@@ -166,23 +165,33 @@ const Form = props => {
       (e.target.value.trim().length < obj.min ||
         e.target.value.trim().length > obj.max)
     ) {
-      dispatchValidityState({
-        type: 'USER_INPUT',
-        state: false,
-        userMsg: `${capitalizeWord(obj.key)} must be between ${obj.min} and ${
-          obj.max
-        } characters.`,
+      setErrorsList(prevData => {
+        return {
+          ...prevData,
+
+          [obj.key]: {
+            userMsg: `${capitalizeWord(obj.key)} must be between ${
+              obj.min
+            } and ${obj.max} characters.`,
+            validationState: false,
+          },
+        };
       });
     } else if (
       obj.type === 'password' &&
       e.target.value.trim().length < obj.min
     ) {
-      dispatchValidityState({
-        type: 'USER_INPUT',
-        state: false,
-        userMsg: `${capitalizeWord(
-          obj.key
-        )} must be at least 8 characters long.`,
+      setErrorsList(prevData => {
+        return {
+          ...prevData,
+
+          [obj.key]: {
+            userMsg: `${capitalizeWord(
+              obj.key
+            )} must be at least 8 characters long.`,
+            validationState: false,
+          },
+        };
       });
     } else if (
       obj.type === 'number' &&
@@ -197,13 +206,27 @@ const Form = props => {
               obj.max
             }.`;
 
-      dispatchValidityState({
-        type: 'USER_INPUT',
-        state: false,
-        userMsg: message,
+      setErrorsList(prevData => {
+        return {
+          ...prevData,
+
+          [obj.key]: {
+            userMsg: message,
+            validationState: false,
+          },
+        };
       });
     } else {
-      dispatchValidityState({ type: 'USER_INPUT', state: true, userMsg: '' });
+      setErrorsList(prevData => {
+        return {
+          ...prevData,
+
+          [obj.key]: {
+            userMsg: '',
+            validationState: true,
+          },
+        };
+      });
 
       setInputData(prevData => {
         const nextData = { ...prevData };
@@ -221,12 +244,19 @@ const Form = props => {
   };
 
   const formSubmitHandler = e => {
+    let flag = false;
+
     e.preventDefault();
 
-    if (!inputValidityState.isValid) {
-      setIsFormValid(false);
-      return;
-    }
+    Object.keys(errorsList).forEach(err => {
+      if (!errorsList[err].validationState) {
+        setIsFormValid(false);
+        flag = true;
+        return;
+      }
+    });
+
+    if (flag) return;
 
     // Data from onChange function in each input
     console.log(inputData);
@@ -274,17 +304,20 @@ const Form = props => {
 
                 {
                   // Select under which element the warning message should be displayed.
-                  focusableEl && focusableEl.id === obj.key ? (
-                    !inputValidityState.isValid ? (
-                      <p className={styles['input-warning-msg']}>
-                        *{inputValidityState.message}
-                      </p>
-                    ) : (
-                      ''
-                    )
-                  ) : (
-                    ''
-                  )
+                  Object.keys(errorsList).map(err => {
+                    if (err === obj.key && !errorsList[err].validationState) {
+                      return (
+                        <p
+                          key={`${obj.key.repeat(2)}`}
+                          className={styles['input-warning-msg']}
+                        >
+                          *{errorsList[err].userMsg}
+                        </p>
+                      );
+                    }
+
+                    return '';
+                  })
                 }
               </div>
             );
