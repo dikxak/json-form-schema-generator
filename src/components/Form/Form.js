@@ -67,37 +67,23 @@ const emailValidationExpression = e => {
   return (
     // email must contain '@' and '.' and should not contain ' ' space
     e.target.type === 'email' &&
-    (!e.target.value.trim().includes('@') ||
-      !e.target.value.trim().includes('.') ||
-      e.target.value.trim().includes(' ') ||
+    (!e.target.value.toLowerCase().trim().includes('@') ||
+      !e.target.value.toLowerCase().trim().includes('.') ||
+      e.target.value.toLowerCase().trim().includes(' ') ||
       !(
         // some value must be present after '@' and, the value present can not be '.'
         (
-          e.target.value.trim().indexOf('@') + 1 < e.target.value.length &&
+          e.target.value.toLowerCase().trim().indexOf('@') + 1 <
+            e.target.value.length &&
           e.target.value.at(e.target.value.trim().indexOf('@') + 1) !== '.'
         )
       ) ||
       checkMoreAtAndDot(e.target.value) ||
-      !(e.target.value.trim().indexOf('.') + 1 < e.target.value.length))
+      !(
+        e.target.value.toLowerCase().trim().indexOf('.') + 1 <
+        e.target.value.length
+      ))
   );
-};
-
-/**
- * Validates that the username only contains alphabet, numeric, underscore and dash value
- * If username contains value rather than defined above, false is returned else true is returned.
- * @param {string} username - value for the username
- * @returns {boolean}
- */
-const validateUserName = (username = 'username') => {
-  let flag = true;
-
-  username.split('').forEach(letter => {
-    if (!/^[a-zA-Z0-9_-]/.test(letter)) {
-      flag = false;
-    }
-  });
-
-  return flag;
 };
 
 const Form = props => {
@@ -146,26 +132,51 @@ const Form = props => {
    * Handles the input change in the input element and also validates the inputs
    * @param {object} e - Event input object where the input has occurred
    */
-  const inputChangeHandler = e => {
-    if (e.target.value.trim().length === 0 && e.target.name !== 'username') {
+  const inputChangeHandler = (obj, e) => {
+    if (e.target.value.trim().length === 0) {
       // Validate for empty value
       dispatchValidityState({
         type: 'USER_INPUT',
         state: false,
         userMsg: `${capitalizeWord(e.target.id)} can not be empty.`,
       });
-    } else if (emailValidationExpression(e)) {
-      // Validate for email, email must contain '@' and '.'
+    } else if (obj.type === 'email' && emailValidationExpression(e)) {
       dispatchValidityState({
         type: 'USER_INPUT',
         state: false,
         userMsg: `The input is not a valid email address.`,
       });
     } else if (
-      e.target.type === 'password' &&
-      e.target.value.trim().length < +e.target.min
+      obj.type === 'text' &&
+      obj.min &&
+      !obj.max &&
+      e.target.value.trim().length < obj.min
     ) {
-      // Validate for password, if length is less than 8, password is invalid.
+      dispatchValidityState({
+        type: 'USER_INPUT',
+        state: false,
+        userMsg: `${capitalizeWord(obj.key)} must be at least ${
+          obj.min
+        } characters.`,
+      });
+    } else if (
+      obj.type === 'text' &&
+      obj.min &&
+      obj.max &&
+      (e.target.value.trim().length < obj.min ||
+        e.target.value.trim().length > obj.max)
+    ) {
+      dispatchValidityState({
+        type: 'USER_INPUT',
+        state: false,
+        userMsg: `${capitalizeWord(obj.key)} must be between ${obj.min} and ${
+          obj.max
+        } characters.`,
+      });
+    } else if (
+      obj.type === 'password' &&
+      e.target.value.trim().length < obj.min
+    ) {
       dispatchValidityState({
         type: 'USER_INPUT',
         state: false,
@@ -174,27 +185,22 @@ const Form = props => {
         )} must be at least 8 characters long.`,
       });
     } else if (
-      e.target.name === 'username' &&
-      (e.target.value.trim().length < +e.target.min ||
-        e.target.value.trim().length > +e.target.max)
+      obj.type === 'number' &&
+      (+e.target.value < obj.min || +e.target.value > obj.max)
     ) {
+      const message =
+        obj.min && !obj.max
+          ? `${capitalizeWord(obj.key)} must be more than or equal to ${
+              obj.min
+            }.`
+          : `${capitalizeWord(obj.key)} must be between ${obj.min} and ${
+              obj.max
+            }.`;
+
       dispatchValidityState({
         type: 'USER_INPUT',
         state: false,
-        userMsg: `${capitalizeWord(
-          e.target.name
-        )} must contain more than 6 and less than 20 characters`,
-      });
-    } else if (
-      e.target.name === 'username' &&
-      !validateUserName(e.target.value.trim())
-    ) {
-      dispatchValidityState({
-        type: 'USER_INPUT',
-        state: false,
-        userMsg: `${capitalizeWord(
-          e.target.name
-        )} should only contain alphabet, number, underscore or dash.`,
+        userMsg: message,
       });
     } else {
       dispatchValidityState({ type: 'USER_INPUT', state: true, userMsg: '' });
@@ -261,7 +267,7 @@ const Form = props => {
                   type={obj.type}
                   name={obj.key}
                   placeholder={obj.placeholder}
-                  onChange={inputChangeHandler}
+                  onChange={inputChangeHandler.bind(null, obj)}
                   min={obj.min ? obj.min : null}
                   max={obj.max ? obj.max : null}
                 />

@@ -6,18 +6,22 @@
       "type": "text",
       "label": "Spot name",
       "placeholder": "Enter full name of the spot",
-      "required": true
+      "required": true,
+      "min": 8,
+      "max": 50
     },
     "spotAddress": {
       "type": "text",
       "label": "Spot address",
       "placeholder": "Enter full address of the spot",
-      "required": true
+      "required": true,
+      "min": 10
     },
     "availableSpotNo": {
       "type": "number",
       "label": "Available spot no",
-      "placeholder": "Enter number of spot available"
+      "placeholder": "Enter number of spot available",
+      "min": 1
     },
     "spotEmail": {
       "type": "email",
@@ -27,7 +31,9 @@
     "spotPrice": {
       "type": "number",
       "label": "Spot price",
-      "placeholder": "Enter price per visit"
+      "placeholder": "Enter price per visit",
+      "min": 100,
+      "max": 10000
     },
     "spotPassword": {
       "type": "password",
