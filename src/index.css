@@ -18,7 +18,7 @@ body {
   font-weight: 400;
 
   display: grid;
-  align-items: center;
+  place-content: center;
 }
 
 @media (max-width: 39em) {
